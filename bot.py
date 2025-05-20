@@ -6,9 +6,9 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-# 🔐 Проверка переменных окружения
-TOKEN = os.getenv("BOT_TOKEN")
-USER_ID = os.getenv("USER_ID")
+# 🔐 ЖЁСТКО ЗАДАННЫЕ ДАННЫЕ
+TOKEN = "7970596881:AAGMETGS2Rvcp5PhGvo57l09ODbbBQR19aU"
+USER_ID = 918342062
 
 if not TOKEN or not USER_ID:
     raise ValueError("BOT_TOKEN и USER_ID должны быть заданы как переменные среды.")
