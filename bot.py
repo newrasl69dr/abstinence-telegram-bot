@@ -6,8 +6,14 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
+# 🔐 Проверка переменных окружения
 TOKEN = os.getenv("BOT_TOKEN")
-USER_ID = int(os.getenv("USER_ID"))
+USER_ID = os.getenv("USER_ID")
+
+if not TOKEN or not USER_ID:
+    raise ValueError("BOT_TOKEN и USER_ID должны быть заданы как переменные среды.")
+
+USER_ID = int(USER_ID)
 
 DATA_FILE = "data.json"
 
@@ -123,11 +129,12 @@ async def handle_response(update: Update, context: ContextTypes.DEFAULT_TYPE):
     save_data(data)
     await update.message.reply_text("✅ Ответ сохранён.")
 
-async def send_motivation(context: ContextTypes.DEFAULT_TYPE):
+# Обновлено: используем bot напрямую
+async def send_motivation(bot):
     message = random.choice(MOTIVATIONS)
-    await context.bot.send_message(chat_id=USER_ID, text=f"💪 {message}")
+    await bot.send_message(chat_id=USER_ID, text=f"💪 {message}")
 
-async def send_stat_request(context: ContextTypes.DEFAULT_TYPE):
+async def send_stat_request(bot):
     data = load_data()
     if not data["start_date"]:
         return
@@ -135,7 +142,7 @@ async def send_stat_request(context: ContextTypes.DEFAULT_TYPE):
     text = f"""📅 День: {day_number}
 🧠 Срыв: (да/нет)
 🛏 Сон до 23:30: (да/нет)"""
-    await context.bot.send_message(chat_id=USER_ID, text=text)
+    await bot.send_message(chat_id=USER_ID, text=text)
 
 async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id != USER_ID:
